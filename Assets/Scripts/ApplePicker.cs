@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ApplePicker : MonoBehaviour
 {
@@ -11,6 +12,10 @@ public class ApplePicker : MonoBehaviour
     public float basketBottom = -14f;
     public float basketSpacing = 2f;
     public List<GameObject> basketList;
+    public GameObject endMessage;
+    public static bool isGameOver = false;
+
+    public Text nameGT;
 
     void Start()
     {
@@ -25,6 +30,22 @@ public class ApplePicker : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if(isGameOver)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                isGameOver = false;
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene(0);
+            }
+        }
+    }
+
     public void AppleDestroyed()
     {
         GameObject[] tAppleArray = GameObject.FindGameObjectsWithTag("Apple");
@@ -32,15 +53,24 @@ public class ApplePicker : MonoBehaviour
         {
             Destroy(tGO);
         }
-
-        int basketIndex = basketList.Count - 1;
-        GameObject tbasketGO = basketList[basketIndex];
-        basketList.RemoveAt(basketIndex);
-        Destroy(tbasketGO);
+        if (!isGameOver)
+        {
+            int basketIndex = basketList.Count - 1;
+            GameObject tbasketGO = basketList[basketIndex];
+            basketList.RemoveAt(basketIndex);
+            Destroy(tbasketGO);
+        }
 
         if(basketList.Count == 0)
         {
-            SceneManager.LoadScene("_Scene_0");
+            GameOver();
         }
+    }
+
+    public void GameOver()
+    {
+        endMessage.SetActive(true);
+        isGameOver = true;
+        MainManager.Instance.SaveInfo();
     }
 }

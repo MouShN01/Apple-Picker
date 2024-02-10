@@ -7,6 +7,7 @@ public class Basket : MonoBehaviour
 {
     [Header("Set Dynamically")]
     public Text scoreGT;
+    public Text tPlayerName;
 
     private void Start()
     {
@@ -38,9 +39,10 @@ public class Basket : MonoBehaviour
             score += 100;
             scoreGT.text = score.ToString();
 
-            if(score > HighScore.score)
+            if(score > MainManager.Instance.highScore)
             {
-                HighScore.score = score;
+                MainManager.Instance.highScore = score;
+                MainManager.Instance.topPlayerName = MainManager.Instance.playerName;
             }
 
         }
